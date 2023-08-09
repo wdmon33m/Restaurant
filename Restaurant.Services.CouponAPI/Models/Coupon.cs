@@ -11,7 +11,7 @@ namespace Restaurant.Services.CouponAPI.Models
         [Required]
         public double DiscountAmount { get; set; }
         [Required]
-        public string MinAmount { get; set; }
+        public double MinAmount { get; set; }
 
     }
 }

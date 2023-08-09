@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Restaurant.Services.CouponAPI.Data;
 
@@ -10,9 +11,11 @@ using Restaurant.Services.CouponAPI.Data;
 namespace Restaurant.Services.CouponAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230809023537_UpdateMinAmountColumn")]
+    partial class UpdateMinAmountColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,13 +53,6 @@ namespace Restaurant.Services.CouponAPI.Migrations
                             CouponCode = "10OFF",
                             DiscountAmount = 10.0,
                             MinAmount = 20.0
-                        },
-                        new
-                        {
-                            CouponID = 2,
-                            CouponCode = "20OFF",
-                            DiscountAmount = 20.0,
-                            MinAmount = 40.0
                         });
                 });
 #pragma warning restore 612, 618
