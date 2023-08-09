@@ -6,13 +6,14 @@ namespace Restaurant.Services.CouponAPI
 {
     public class MappingConfig
     {
-        public static MapperConfiguration RegesterMaps()
+        public static MapperConfiguration RegisterMaps()
         {
-            var mapingConfig = new MapperConfiguration(config =>
+            var mappingConfig = new MapperConfiguration(config =>
             {
-                config.CreateMap<Coupon,CouponDto>().ReverseMap();
+                config.CreateMap<Coupon,CouponDto>();
+                config.CreateMap<CouponDto, Coupon>();
             });
-            return mapingConfig;
+            return mappingConfig;
         }
     }
 }

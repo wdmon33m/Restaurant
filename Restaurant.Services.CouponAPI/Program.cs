@@ -12,7 +12,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefualtConnection"));
 });
 
-IMapper mapper = MappingConfig.RegesterMaps().CreateMapper();
+IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
