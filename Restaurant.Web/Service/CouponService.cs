@@ -7,7 +7,7 @@ namespace Restaurant.Web.Service
     public class CouponService : ICouponService
     {
         private readonly IBaseService _baseService;
-        private const string couponApiUrl = "api/coupon/";
+        private const string couponApiUrl = "/api/coupon/";
 
         public CouponService(IBaseService baseService)
         {
