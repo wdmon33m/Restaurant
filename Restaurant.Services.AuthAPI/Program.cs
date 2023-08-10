@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Restaurant.Services.AuthAPI.Data;
 using Restaurant.Services.AuthAPI.Models;
+using Restaurant.Services.AuthAPI.Service;
+using Restaurant.Services.AuthAPI.Service.IService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFramework
     .AddDefaultTokenProviders();
 
 builder.Services.AddControllers();
+
+builder.Services.AddScoped<IAuthService,AuthService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
