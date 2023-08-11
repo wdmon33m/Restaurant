@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Restaurant.Services.AuthAPI.Models;
 using Restaurant.Services.AuthAPI.Models.Dto;
 using Restaurant.Services.AuthAPI.Service.IService;
+using System.Net;
 
 namespace Restaurant.Services.AuthAPI.Controllers
 {
@@ -11,7 +13,7 @@ namespace Restaurant.Services.AuthAPI.Controllers
     public class AuthAPIController : ControllerBase
     {
         private readonly IAuthService _authService;
-        protected ResponseDto _response;
+        protected APIResponse _response;
 
 
         public AuthAPIController(IAuthService authService)
@@ -21,28 +23,60 @@ namespace Restaurant.Services.AuthAPI.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegistrationRequestDto model)
+        public async Task<ActionResult<APIResponse>> Register([FromBody] RegistrationRequestDto model)
         {
-            var errorMessage = await _authService.Register(model);
-            if (!string.IsNullOrEmpty(errorMessage))
+            _response = await _authService.Register(model);
+            if (!_response.ErrorMessages.IsNullOrEmpty())
             {
                 _response.IsSuccess = false;
-                _response.Message = errorMessage;
-                return BadRequest(_response);
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                return _response;
             }
+
+            _response.StatusCode = HttpStatusCode.Created;
+            return _response;
+        }
+
+
+        [HttpPost("login")]
+        public async Task<ActionResult<APIResponse>> Login([FromBody] LoginRequestDto model)
+        {
+            _response = await _authService.Login(model);
+            if (_response.ErrorMessages != null)
+            {
+                _response.IsSuccess = false;
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                return _response;
+            }
+
+            _response.StatusCode = HttpStatusCode.OK;
             return Ok(_response);
         }
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDto model)
+        [HttpPost("role")]
+        public async Task<ActionResult<APIResponse>> CreateRole([FromBody] CreateRoleDto model)
         {
-            var loginResponse = await _authService.Login(model);
-            if (loginResponse.User == null)
+            _response = await _authService.CreateRole(model);
+            if (!_response.ErrorMessages.IsNullOrEmpty())
             {
                 _response.IsSuccess = false;
-                _response.Message = "Username or password is incorrect";
-                return BadRequest(_response);
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                return _response;
             }
-            _response.Result = loginResponse;
+            _response.StatusCode = HttpStatusCode.Created;
+            return _response;
+        }
+        [HttpPost("AssignRole")]
+        public async Task<ActionResult<APIResponse>> AssignRole([FromBody] AssignRoleDto model)
+        {
+            _response = await _authService.AssignRole(model.Email,model.RoleName);
+            if (!_response.ErrorMessages.IsNullOrEmpty())
+            {
+                _response.IsSuccess = false;
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                return _response;
+            }
+
+            _response.StatusCode = HttpStatusCode.OK;
             return Ok(_response);
         }
     }
