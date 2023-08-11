@@ -13,6 +13,8 @@ namespace Restaurant.Services.CouponAPI.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Coupon>().HasIndex(c => c.CouponCode).IsUnique();
+
             modelBuilder.Entity<Coupon>().HasData(new Coupon
             {
                 CouponID = 1,

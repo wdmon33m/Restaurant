@@ -11,7 +11,6 @@ namespace Restaurant.Services.AuthAPI.Service.IService
         Task<APIResponse> GetByIdAsync(string id);
         Task<APIResponse> AssignRole(string email, string roleName);
         Task<APIResponse> CreateRole(CreateRoleDto roleDto);
-        Task<APIResponse> RemoveRoleByName(string roleName);
-        Task<APIResponse> RemoveRoleById(string roleId);
+        Task<APIResponse> RemoveRoleAsync(string filter, bool isRemoveById = true);
     }
 }

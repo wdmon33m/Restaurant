@@ -93,44 +93,32 @@ namespace Restaurant.Services.AuthAPI.Service
 
             return _apiResponse;
         }
-        public async Task<APIResponse> RemoveRoleByName(string roleName)
+
+        public async Task<APIResponse> RemoveRoleAsync(string filter, bool isRemoveById = true)
         {
             try
             {
-                var role = await _db.ApplicationRoles.FirstOrDefaultAsync(u => u.Name.ToLower() == roleName.ToLower());
-                if (role == null)
-                {
-                    _apiResponse.ErrorMessages = new List<string>() { "Role " + roleName + " is not exist!" };
-                    return _apiResponse;
-                }
+                ApplicationRole role;
 
-                var result = await _roleManager.DeleteAsync(role);
-                if (result.Succeeded)
+                
+                if (isRemoveById)
                 {
-                    _apiResponse.Result = "Role has been removed successfully";
-                    return _apiResponse;
+                    role = _db.ApplicationRoles.First(u => u.Id.ToLower() == filter.ToLower());
                 }
                 else
                 {
-                    _apiResponse.ErrorMessages = new List<string> { result.Errors.First().Description };
+                    role = _db.ApplicationRoles.First(u => u.Name.ToLower() == filter.ToLower());
                 }
-            }
-            catch (Exception ex)
-            {
-                _apiResponse.ErrorMessages = new List<string> { ex.Message };
-            }
 
-            return _apiResponse;
-        }
-
-        public async Task<APIResponse> RemoveRoleById(string roleId)
-        {
-            try
-            {
-                var role = _db.ApplicationRoles.First(u => u.Id.ToLower() == roleId.ToLower());
                 if (role == null)
                 {
-                    _apiResponse.ErrorMessages = new List<string>() { "Role " + roleId + " is not exist!" };
+                    _apiResponse.ErrorMessages = new List<string>() { "Role " + filter + " is not exist!" };
+                    return _apiResponse;
+                }
+
+                if (role.Name.Equals("ADMIN") || role.Name.Equals("CUSTOMER"))
+                {
+                    _apiResponse.ErrorMessages = new() { "You can not remove this role" };
                     return _apiResponse;
                 }
 

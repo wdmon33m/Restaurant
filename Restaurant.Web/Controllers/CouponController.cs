@@ -26,7 +26,7 @@ namespace Restaurant.Web.Controllers
             }
             else
             {
-                TempData["error"] = response?.Message;
+                TempData["error"] = response?.ErrorMessages;
             }
 
             return View(list);
@@ -41,7 +41,6 @@ namespace Restaurant.Web.Controllers
             if (ModelState.IsValid)
             {
                 ResponseDto? response = await _couponService.CreateCouponAsync(couponDto);
-
                 if (response != null && response.IsSuccess)
                 {
                     TempData["success"] = "Coupon created successfully";
@@ -49,7 +48,7 @@ namespace Restaurant.Web.Controllers
                 }
                 else
                 {
-                    TempData["error"] = response?.Message;
+                    TempData["error"] = response?.ErrorMessages.First();
                 }
             }
             return View(couponDto);
@@ -65,7 +64,7 @@ namespace Restaurant.Web.Controllers
             }
             else
             {
-                TempData["error"] = response?.Message;
+                TempData["error"] = response?.ErrorMessages;
             }
             return NotFound();
         }
@@ -76,12 +75,12 @@ namespace Restaurant.Web.Controllers
 
             if (response != null && response.IsSuccess)
             {
-                    TempData["success"] = "Coupon deleted successfully";
+                TempData["success"] = "Coupon deleted successfully";
                 return RedirectToAction(nameof(CouponIndex));
             }
             else
             {
-                TempData["error"] = response?.Message;
+                TempData["error"] = response?.ErrorMessages;
             }
 
             return View(response);

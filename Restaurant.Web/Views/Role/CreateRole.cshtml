@@ -1,0 +1,25 @@
+﻿@model CreateRoleDto
+
+<form asp-action="CreateRole">
+    <div class="container border p-4">
+        <div class="row text-center p-3">
+            <h1>Create Role</h1>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-6 offset-3 pb-2">
+                <input asp-for="Name" class="form-control" placeholder="Name..." />
+                <span asp-validation-for="Name" class="text-danger" />
+            </div>
+            <div class="col-12 col-md-6 offset-3 pb-2">
+                <button type="submit" class="form-control btn btn-success" value="Submit">Create</button>
+            </div>
+            <div class="col-12 col-md-6 offset-3 pb-2">
+                <a asp-action="RoleIndex" class="btn-primary btn form-control ">Back to List</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

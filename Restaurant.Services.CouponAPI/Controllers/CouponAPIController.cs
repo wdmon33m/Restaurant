@@ -33,7 +33,7 @@ namespace Restaurant.Services.CouponAPI.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.Message = ex.Message;
+                _response.ErrorMessages = new List<string>() { ex.Message };
             }
             return _response;
         }
@@ -50,7 +50,7 @@ namespace Restaurant.Services.CouponAPI.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.Message = ex.Message;
+                _response.ErrorMessages = new List<string>() { ex.Message };
             }
             return _response;
         }
@@ -68,7 +68,7 @@ namespace Restaurant.Services.CouponAPI.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.Message = ex.Message;
+                _response.ErrorMessages = new List<string>() { ex.Message };
             }
             return _response;
         }
@@ -78,15 +78,30 @@ namespace Restaurant.Services.CouponAPI.Controllers
         {
             try
             {
-                Coupon coupon = _mapper.Map<Coupon>(couponDto);
-                _db.Coupons.Add(coupon);
-                _db.SaveChanges();
-                _response.Result = couponDto;
+                Coupon coupon = _db.Coupons.FirstOrDefault(c => c.CouponCode.ToLower() == couponDto.CouponCode.ToLower());
+                if (coupon != null)
+                {
+                    _response.IsSuccess = false;
+                    _response.ErrorMessages = new List<string>() { "Coupon code is already exist!" };
+                    return _response;
+                }
+                if (couponDto.DiscountAmount > couponDto.MinAmount)
+                {
+                    _response.IsSuccess = false;
+                    _response.ErrorMessages = new List<string>() { "Minimum Amount less than Discount Amount" };
+                }
+                else
+                {
+                    coupon = _mapper.Map<Coupon>(couponDto);
+                    _db.Coupons.Add(coupon);
+                    _db.SaveChanges();
+                    _response.Result = couponDto;
+                }
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.Message = ex.Message;
+                _response.ErrorMessages = new List<string>() { ex.Message };
             }
             return _response;
         }
@@ -104,7 +119,7 @@ namespace Restaurant.Services.CouponAPI.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.Message = ex.Message;
+                _response.ErrorMessages = new List<string>() { ex.Message };
             }
             return _response;
         }
@@ -122,7 +137,7 @@ namespace Restaurant.Services.CouponAPI.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.Message = ex.Message;
+                _response.ErrorMessages = new List<string>() { ex.Message };
             }
             return _response;
         }

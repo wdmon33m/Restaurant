@@ -56,13 +56,13 @@ namespace Restaurant.Web.Service
                 switch (apiResponse.StatusCode)
                 {
                     case HttpStatusCode.NotFound:
-                        return new() { IsSuccess = false, Message = "Not Found" };
+                        return new() { IsSuccess = false, ErrorMessages = new List<string>() { "Not Found" } };
                     case HttpStatusCode.Forbidden:
-                        return new() { IsSuccess = false, Message = "Access Denied" };
+                        return new() { IsSuccess = false, ErrorMessages = new List<string>() { "Access Denied" } };
                     case HttpStatusCode.Unauthorized:
-                        return new() { IsSuccess = false, Message = "Unauthorized" };
+                        return new() { IsSuccess = false, ErrorMessages = new List<string>() { "Unauthorized" } };
                     case HttpStatusCode.InternalServerError:
-                        return new() { IsSuccess = false, Message = "Internal Server Error" };
+                        return new() { IsSuccess = false, ErrorMessages = new List<string>() { "Internal Server Error" } };
                     default:
                         var apiContent = await apiResponse.Content.ReadAsStringAsync();
                         var apiResponseDto = JsonConvert.DeserializeObject<ResponseDto>(apiContent);
@@ -73,7 +73,7 @@ namespace Restaurant.Web.Service
             {
                 var dto = new ResponseDto
                 {
-                    Message = ex.Message,
+                    ErrorMessages = new List<string>() { ex.Message },
                     IsSuccess = false
                 };
                 return dto;

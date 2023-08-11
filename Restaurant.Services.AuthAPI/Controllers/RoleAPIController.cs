@@ -89,7 +89,7 @@ namespace Restaurant.Services.AuthAPI.Controllers
         [HttpDelete("/romovebyname/{roleName}")]
         public async Task<ActionResult<APIResponse>> RemoveRoleByName(string roleName)
         {
-            var _response = await _roleService.RemoveRoleByName(roleName);
+            var _response = await _roleService.RemoveRoleAsync(roleName,false);
             if (!_response.ErrorMessages.IsNullOrEmpty())
             {
                 _response.IsSuccess = false;
@@ -104,7 +104,7 @@ namespace Restaurant.Services.AuthAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<APIResponse>> RemoveRoleByID(string id)
         {
-            var _response = await _roleService.RemoveRoleById(id);
+            var _response = await _roleService.RemoveRoleAsync(id);
             if (!_response.ErrorMessages.IsNullOrEmpty())
             {
                 _response.IsSuccess = false;
