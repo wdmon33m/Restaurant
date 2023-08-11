@@ -52,34 +52,5 @@ namespace Restaurant.Services.AuthAPI.Controllers
             _response.StatusCode = HttpStatusCode.OK;
             return Ok(_response);
         }
-        [HttpPost("role")]
-        public async Task<ActionResult<APIResponse>> CreateRole([FromBody] CreateRoleDto model)
-        {
-            _response = await _authService.CreateRole(model);
-            if (!_response.ErrorMessages.IsNullOrEmpty())
-            {
-                _response.IsSuccess = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                return _response;
-            }
-            _response.StatusCode = HttpStatusCode.Created;
-            return _response;
-        }
-        [HttpPost("AssignRole")]
-        public async Task<ActionResult<APIResponse>> AssignRole([FromBody] AssignRoleDto model)
-        {
-            _response = await _authService.AssignRole(model.Email,model.RoleName);
-            if (!_response.ErrorMessages.IsNullOrEmpty())
-            {
-                _response.IsSuccess = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                return _response;
-            }
-
-            _response.StatusCode = HttpStatusCode.OK;
-            return Ok(_response);
-        }
     }
-    
-
 }

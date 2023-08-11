@@ -15,6 +15,15 @@ namespace Restaurant.Services.AuthAPI.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<ApplicationRole>().HasData(new ApplicationRole
+            {
+                Name = "CUSTOMER"
+            });
+            modelBuilder.Entity<ApplicationRole>().HasData(new ApplicationRole
+            {
+                Name = "ADMIN"
+            });
         }
     }
 }

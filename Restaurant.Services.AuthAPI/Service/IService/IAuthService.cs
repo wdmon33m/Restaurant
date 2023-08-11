@@ -7,7 +7,6 @@ namespace Restaurant.Services.AuthAPI.Service.IService
     {
         Task<APIResponse> Register(RegistrationRequestDto registrationRequestDto);
         Task<APIResponse> Login(LoginRequestDto loginRequestDto);
-        Task<APIResponse> AssignRole(string email, string roleName);
-        Task<APIResponse> CreateRole(CreateRoleDto roleDto);
+        
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Restaurant.Services.AuthAPI.Data;
 
@@ -11,9 +12,11 @@ using Restaurant.Services.AuthAPI.Data;
 namespace Restaurant.Services.AuthAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230811055834_MakeCouponCodeUnique")]
+    partial class MakeCouponCodeUnique
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -240,20 +243,6 @@ namespace Restaurant.Services.AuthAPI.Migrations
                         .HasColumnType("bit");
 
                     b.HasDiscriminator().HasValue("ApplicationRole");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "88823985-b17d-4828-b481-005cf482f7e0",
-                            Name = "CUSTOMER",
-                            IsActive = true
-                        },
-                        new
-                        {
-                            Id = "5086bb87-f135-4627-b808-0ee89479f02e",
-                            Name = "ADMIN",
-                            IsActive = true
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
