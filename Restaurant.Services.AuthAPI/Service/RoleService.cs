@@ -23,23 +23,30 @@ namespace Restaurant.Services.AuthAPI.Service
             _apiResponse = new();
         }
 
-        public async Task<APIResponse> AssignRole(string email, string roleName)
+        public async Task<APIResponse> AssignRole(AssignRoleDto assignRoleDto)
         {
             var user = _db.ApplicationUsers.FirstOrDefault(u =>
-                            u.Email.ToLower() == email.ToLower());
+                            u.Email.ToLower() == assignRoleDto.Email.ToLower());
             try
             {
                 if (user != null)
                 {
-                    if (_roleManager.RoleExistsAsync(roleName).GetAwaiter().GetResult())
+                    if (_roleManager.RoleExistsAsync(assignRoleDto.RoleName).GetAwaiter().GetResult())
                     {
-                        await _userManager.AddToRoleAsync(user, roleName);
-                        _apiResponse.Result = "Role : " + roleName + " added to " + email + " Successufully";
-                        return _apiResponse;
+                        var result = await _userManager.AddToRoleAsync(user, assignRoleDto.RoleName);
+                        if (result != null && result.Succeeded)
+                        {
+                            _apiResponse.Result = "Role : " + assignRoleDto.RoleName + " added to " + assignRoleDto.Email + " Successufully";
+                            return _apiResponse;
+                        }
+                        else
+                        {
+                            _apiResponse.ErrorMessages = new List<string> { result.Errors.First().Description };
+                        }
                     }
                     else
                     {
-                        _apiResponse.ErrorMessages = new List<string> { "Role " + roleName + " is not exist" };
+                        _apiResponse.ErrorMessages = new List<string> { "Role " + assignRoleDto.RoleName + " is not exist" };
                         return _apiResponse;
                     }
                 }

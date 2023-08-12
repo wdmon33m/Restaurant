@@ -71,10 +71,10 @@ namespace Restaurant.Services.AuthAPI.Controllers
             _response.StatusCode = HttpStatusCode.Created;
             return _response;
         }
-        [HttpPost("/assign")]
+        [HttpPost("assign")]
         public async Task<ActionResult<APIResponse>> AssignRole([FromBody] AssignRoleDto model)
         {
-            var _response = await _roleService.AssignRole(model.Email, model.RoleName);
+            var _response = await _roleService.AssignRole(model);
             if (!_response.ErrorMessages.IsNullOrEmpty())
             {
                 _response.IsSuccess = false;
@@ -86,7 +86,7 @@ namespace Restaurant.Services.AuthAPI.Controllers
             return Ok(_response);
         }
 
-        [HttpDelete("/romovebyname/{roleName}")]
+        [HttpDelete("romovebyname/{roleName}")]
         public async Task<ActionResult<APIResponse>> RemoveRoleByName(string roleName)
         {
             var _response = await _roleService.RemoveRoleAsync(roleName,false);

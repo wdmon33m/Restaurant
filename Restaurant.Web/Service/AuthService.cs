@@ -22,7 +22,7 @@ namespace Restaurant.Web.Service
                 ApiType = SD.ApiType.POST,
                 Data = loginRequestDto,
                 Url = SD.AuthApiBase + authApiUrl + "login"
-            });
+            },withBearer:false);
         }
 
         public async Task<ResponseDto?> RegisterAsync(RegistrationRequestDto registrationRequestDto)
@@ -32,7 +32,7 @@ namespace Restaurant.Web.Service
                 ApiType = SD.ApiType.POST,
                 Data = registrationRequestDto,
                 Url = SD.AuthApiBase + authApiUrl + "register"
-            });
+            }, withBearer: false);
         }
     }
 }

@@ -68,8 +68,6 @@ namespace Restaurant.Web.Controllers
                 TempData["error"] = response?.ErrorMessages.First();
                 return RedirectToAction(nameof(RoleIndex));
             }
-
-            return View(roleDto);
         }
         [HttpGet]
         public async Task<IActionResult> RemoveRole(string roleId)

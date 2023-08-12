@@ -21,7 +21,7 @@ namespace Restaurant.Web.Service
                 ApiType = SD.ApiType.POST,
                 Data = assignRoleDto,
                 Url = SD.AuthApiBase + authApiUrl + "assign"
-            });
+            },withBearer:false);
         }
 
         public async Task<ResponseDto?> CreateRoleAsync(CreateRoleDto createRoleDto)

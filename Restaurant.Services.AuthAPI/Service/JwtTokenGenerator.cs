@@ -17,24 +17,25 @@ namespace Restaurant.Services.AuthAPI.Service
             _jWTOptions = jWTOptions.Value;
         }
 
-        public string GenerateToken(ApplicationUser applicationUser)
+        public string GenerateToken(ApplicationUser applicationUser, IEnumerable<string> roles)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
             var key = Encoding.ASCII.GetBytes(_jWTOptions.Secret);
 
-            var cliamList = new List<Claim>
+            var claimList = new List<Claim>
             {
                 new Claim (JwtRegisteredClaimNames.Email, applicationUser.Email),
                 new Claim (JwtRegisteredClaimNames.Sub, applicationUser.Id),
                 new Claim (JwtRegisteredClaimNames.Name, applicationUser.UserName)
             };
+            claimList.AddRange(roles.Select(role => new Claim(ClaimTypes.Role,role)));
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Audience = _jWTOptions.Audience,
                 Issuer = _jWTOptions.Issuer,
-                Subject = new ClaimsIdentity(cliamList),
+                Subject = new ClaimsIdentity(claimList),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials
                                     (new SymmetricSecurityKey(key),SecurityAlgorithms.HmacSha256Signature)

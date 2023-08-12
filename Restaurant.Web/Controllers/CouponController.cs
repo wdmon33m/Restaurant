@@ -26,7 +26,7 @@ namespace Restaurant.Web.Controllers
             }
             else
             {
-                TempData["error"] = response?.ErrorMessages;
+                TempData["error"] = response?.ErrorMessages.First();
             }
 
             return View(list);
@@ -80,10 +80,9 @@ namespace Restaurant.Web.Controllers
             }
             else
             {
-                TempData["error"] = response?.ErrorMessages;
+                TempData["error"] = response?.ErrorMessages.FirstOrDefault();
+                return RedirectToAction(nameof(CouponIndex));
             }
-
-            return View(response);
         }
     }
 }

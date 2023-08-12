@@ -9,7 +9,7 @@ namespace Restaurant.Services.AuthAPI.Service.IService
         Task<APIResponse> GetAllAsync();
         Task<APIResponse> GetByRoleNameAsync(string roleName);
         Task<APIResponse> GetByIdAsync(string id);
-        Task<APIResponse> AssignRole(string email, string roleName);
+        Task<APIResponse> AssignRole(AssignRoleDto assignRoleDto);
         Task<APIResponse> CreateRole(CreateRoleDto roleDto);
         Task<APIResponse> RemoveRoleAsync(string filter, bool isRemoveById = true);
     }
