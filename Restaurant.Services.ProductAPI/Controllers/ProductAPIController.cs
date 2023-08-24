@@ -11,7 +11,6 @@ namespace Restaurant.Services.ProductAPI.Controllers
 {
     [Route("api/product")]
     [ApiController]
-    [Authorize]
     public class ProductAPIController : ControllerBase
     {
         private readonly AppDbContext _db;
@@ -62,6 +61,7 @@ namespace Restaurant.Services.ProductAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ResponseDto Post([FromBody] ProductDto productDto)
         {
             try
@@ -90,6 +90,7 @@ namespace Restaurant.Services.ProductAPI.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         public ResponseDto Put([FromBody] ProductDto productDto)
         {
             try

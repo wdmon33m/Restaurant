@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Restaurant.Web.Models
+namespace Restaurant.Web.Models.Dto
 {
     public class CouponDto
     {

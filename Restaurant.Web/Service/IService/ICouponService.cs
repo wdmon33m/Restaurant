@@ -1,4 +1,5 @@
 ﻿using Restaurant.Web.Models;
+using Restaurant.Web.Models.Dto;
 
 namespace Restaurant.Web.Service.IService
 {
