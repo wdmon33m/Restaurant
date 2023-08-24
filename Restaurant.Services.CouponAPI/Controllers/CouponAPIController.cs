@@ -47,6 +47,10 @@ namespace Restaurant.Services.CouponAPI.Controllers
             try
             {
                 Coupon coupon = _db.Coupons.First(c => c.CouponID == id);
+                if (coupon == null)
+                {
+                    _response.ErrorMessages = new() { "No coupon found" };
+                }
                 _response.Result = _mapper.Map<CouponDto>(coupon);
             }
             catch (Exception ex)
@@ -64,7 +68,10 @@ namespace Restaurant.Services.CouponAPI.Controllers
             try
             {
                 Coupon coupon = _db.Coupons.First(c => c.CouponCode.ToLower() == couponCode.ToLower());
-                
+                if (coupon == null)
+                {
+                    _response.ErrorMessages = new() { "No coupon found" };
+                }
                 _response.Result = _mapper.Map<CouponDto>(coupon);
             }
             catch (Exception ex)
