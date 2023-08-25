@@ -45,13 +45,22 @@ namespace Restaurant.Web.Service
             });
         }
 
-        public async Task<ResponseDto?> ApplyCoupon(CartDto cartDto)
+        public async Task<ResponseDto?> ApplyCouponAsync(CartDto cartDto)
         {
             return await _baseService.SendAsync(new RequestDto()
             {
                 ApiType = SD.ApiType.POST,
-                Data = cartDto,
+                Data = cartDto.CartHeader,
                 Url = SD.ShoppingCartApiBase + cartApiUrl + "ApplyCoupon"
+            });
+        }
+        public async Task<ResponseDto?> RemoveCouponAsync(CartDto cartDto)
+        {
+            return await _baseService.SendAsync(new RequestDto()
+            {
+                ApiType = SD.ApiType.DELETE,
+                Data = cartDto.CartHeader,
+                Url = SD.ShoppingCartApiBase + cartApiUrl + "RemoveCoupon"
             });
         }
     }
