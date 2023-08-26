@@ -67,10 +67,17 @@ namespace Restaurant.Web.Controllers
             {
                 TempData["error"] = response?.ErrorMessages.First();
             }
+
             return View();
         }
         [Authorize]
         public async Task<IActionResult> CartIndex()
+        {
+            return View(await LoadCartDtoBasedOnLoggedInUser());
+        }
+
+        [Authorize]
+        public async Task<IActionResult> CheckOut()
         {
             return View(await LoadCartDtoBasedOnLoggedInUser());
         }
@@ -84,6 +91,10 @@ namespace Restaurant.Web.Controllers
             {
                 CartDto cartDto = JsonConvert.DeserializeObject<CartDto>(Convert.ToString(response.Result));
                 return cartDto;
+            }
+            else
+            {
+                TempData["error"] = response?.ErrorMessages.First();
             }
             return new CartDto();
         }
