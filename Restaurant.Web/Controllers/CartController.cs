@@ -11,10 +11,12 @@ namespace Restaurant.Web.Controllers
     public class CartController : Controller
     {
         private readonly ICartService _cartService;
+        private readonly IOrderService _orderService;
 
-        public CartController(ICartService cartService)
+        public CartController(ICartService cartService, IOrderService orderService)
         {
             _cartService = cartService;
+            _orderService = orderService;
         }
 
         public async Task<IActionResult> Remove(int cartDetailsId)
@@ -82,9 +84,30 @@ namespace Restaurant.Web.Controllers
             return View(await LoadCartDtoBasedOnLoggedInUser());
         }
 
+        [HttpPost]
+        [ActionName("CheckOut")]
+        public async Task<IActionResult> CheckOut(CartDto cartDto)
+        {
+            CartDto updatedCart = new();
+            updatedCart = await LoadCartDtoBasedOnLoggedInUser();
+            updatedCart.CartHeader.Phone = cartDto.CartHeader?.Phone;
+            updatedCart.CartHeader.Email = cartDto.CartHeader?.Email;
+            updatedCart.CartHeader.FirstName = cartDto.CartHeader?.FirstName;
+            updatedCart.CartHeader.LastName = cartDto.CartHeader?.LastName;
+
+            var response = await _orderService.CreateOrderAsync(updatedCart);
+            OrderHeaderDto orderHeaderDto = JsonConvert.DeserializeObject<OrderHeaderDto>(Convert.ToString(response.Result));
+
+            if (response != null && response.IsSuccess)
+            {
+                // get stripe session and redirect to stripe to place order
+            }
+            return View(updatedCart);
+        }
+
         private async Task<CartDto> LoadCartDtoBasedOnLoggedInUser()
         {
-            var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
+             var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
             ResponseDto? response = await _cartService.GetCartByUserId(userId);
 
             if (response != null && response.IsSuccess)

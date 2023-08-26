@@ -16,7 +16,7 @@ namespace Restaurant.Services.OrderAPI.Models
         public string? Email { get; set; }
         public string? Phone { get; set; }
         public DateTime OrderTime { get; set; } = DateTime.Now;
-        public string? Status { get; set; } = SD.Status_Pending;
+        public string? Status { get; set; } 
         public string? PaymentIntenId { get; set; }
         public string? StripeSessionId { get; set; }
         public IEnumerable<OrderDetails> OrderDetails { get; set;}

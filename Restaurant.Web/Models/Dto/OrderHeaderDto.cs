@@ -1,6 +1,4 @@
-﻿using Restaurant.Services.OrderAPI.Utility;
-
-namespace Restaurant.Services.OrderAPI.Models.Dto
+﻿namespace Restaurant.Web.Models.Dto
 {
     public class OrderHeaderDto
     {
@@ -13,7 +11,7 @@ namespace Restaurant.Services.OrderAPI.Models.Dto
         public string? LastName { get; set; }
         public string? Email { get; set; }
         public string? Phone { get; set; }
-        public string? Status { get; set; } = SD.Status_Pending;
+        public string? Status { get; set; }
         public string? PaymentIntenId { get; set; }
         public string? StripeSessionId { get; set; }
         public IEnumerable<OrderDetailsDto> OrderDetails { get; set;}
