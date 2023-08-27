@@ -30,6 +30,51 @@ namespace Restaurant.Services.OrderAPI.Controllers
             _db = db;
             _productService = productService;
         }
+        [Authorize]
+        [HttpGet("GetOrders")]
+        public ResponseDto? Get(string userId="")
+        {
+            try
+            {
+                IEnumerable<OrderHeader> objList;
+                if (User.IsInRole(SD.RoleAdmin))
+                {
+                    objList = _db.OrderHeaders.Include(u => u.OrderDetails)
+                              .OrderByDescending(u => u.OrderHeaderId).ToList();
+                }
+                else
+                {
+                    objList = _db.OrderHeaders.Include(u => u.OrderDetails).Where(u => u.UserId == userId)
+                              .OrderByDescending(u => u.OrderHeaderId).ToList();
+                }
+                _response.Result = _mapper.Map<IEnumerable<OrderHeaderDto>>(objList);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new() { ex.Message };
+            }
+            return _response;
+        }
+
+        [Authorize]
+        [HttpGet("GetOrder/{id:int}")]
+        public async Task<ResponseDto?> Get(int id)
+        {
+            try 
+            {
+                OrderHeader orderHeader = await _db.OrderHeaders.Include(u => u.OrderDetails)
+                                                                .FirstAsync(u => u.OrderHeaderId == id);
+
+                _response.Result = _mapper.Map<OrderHeaderDto>(orderHeader);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new() { ex.Message };
+            }
+            return _response;
+        }
 
         [HttpPost("CreateOrder")]
         [Authorize]
@@ -140,6 +185,40 @@ namespace Restaurant.Services.OrderAPI.Controllers
                     orderHeader.Status = SD.Status_Approved;
                     await _db.SaveChangesAsync();
                     _response.Result = _mapper.Map<OrderHeaderDto>(orderHeader);
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new() { ex.Message };
+            }
+            return _response;
+        }
+
+        [Authorize]
+        [HttpPatch("UpdateOrderStatus/{orderId:int}")]
+        public async Task<ResponseDto> UpdateOrderStatus(int orderId, [FromBody] string newStatus)
+        {
+            try
+            {
+                OrderHeader orderHeader = _db.OrderHeaders.FirstOrDefault(u => u.OrderHeaderId == orderId);
+                if (orderHeader != null)
+                {
+                    if (newStatus == SD.Status_Cancelled)
+                    {
+                        // we'll give refund
+                        var options = new RefundCreateOptions
+                        {
+                            Reason = RefundReasons.RequestedByCustomer,
+                            PaymentIntent = orderHeader.PaymentIntenId
+                        };
+
+                        var service = new RefundService();
+                        Refund refund = await service.CreateAsync(options);
+                    }
+                    
+                    orderHeader.Status = newStatus;
+                    _response.Result = await _db.SaveChangesAsync();
                 }
             }
             catch (Exception ex)

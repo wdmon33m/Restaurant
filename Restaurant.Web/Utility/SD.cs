@@ -16,7 +16,8 @@
             GET,
             POST,
             PUT,
-            DELETE
+            DELETE,
+            PATCH
         }
 
         public const string Status_Pending = "Pending";

@@ -44,5 +44,33 @@ namespace Restaurant.Web.Service
                 Url = SD.OrderApiBase + cartApiUrl + "ValidateStripeSession"
             });
         }
+
+        public async Task<ResponseDto?> GetAllOrdersAsync(string? userId)
+        {
+            return await _baseService.SendAsync(new RequestDto()
+            {
+                ApiType = SD.ApiType.GET,
+                Url = SD.OrderApiBase + cartApiUrl + "GetOrders/" + userId
+            });
+        }
+
+        public async Task<ResponseDto?> GetOrderAsync(int orderId)
+        {
+            return await _baseService.SendAsync(new RequestDto()
+            {
+                ApiType = SD.ApiType.GET,
+                Url = SD.OrderApiBase + cartApiUrl + "GetOrder/" + orderId
+            });
+        }
+
+        public async Task<ResponseDto?> UpdateOrderStatusAsync(int orderId, string newStatus)
+        {
+            return await _baseService.SendAsync(new RequestDto()
+            {
+                ApiType = SD.ApiType.PATCH,
+                Data = newStatus,
+                Url = SD.OrderApiBase + cartApiUrl + "UpdateOrderStatus/" + orderId
+            });
+        }
     }
 }
