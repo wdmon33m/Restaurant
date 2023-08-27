@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Restaurant.Web.Models;
 using Restaurant.Web.Models.Dto;
 using Restaurant.Web.Service.IService;
+using Restaurant.Web.Utility;
 
 namespace Restaurant.Web.Controllers
 {
@@ -77,7 +78,21 @@ namespace Restaurant.Web.Controllers
         {
             return View(await LoadCartDtoBasedOnLoggedInUser());
         }
-
+        [Authorize]
+        public async Task<IActionResult> Confirmation(int orderId)
+        {
+            ResponseDto? response = await _orderService.ValidateStripeSession(orderId);
+            if (response != null && response.IsSuccess)
+            {
+                OrderHeaderDto orderHeaderDto = JsonConvert.DeserializeObject<OrderHeaderDto>(Convert.ToString(response.Result));
+                if (orderHeaderDto.Status == SD.Status_Approved)
+                {
+                    return View(orderId);
+                }
+            }
+            //redirect to error page based on status
+            return View(orderId);
+        }
         [Authorize]
         public async Task<IActionResult> CheckOut()
         {
@@ -101,6 +116,21 @@ namespace Restaurant.Web.Controllers
             if (response != null && response.IsSuccess)
             {
                 // get stripe session and redirect to stripe to place order
+                var domain = Request.Scheme + "://" + Request.Host.Value + "/";
+
+                StripeRequestDto stripeRequestDto = new()
+                {
+                    ApprovedUrl = domain + "cart/Confirmation?orderId=" + orderHeaderDto.OrderHeaderId,
+                    CancelUrl = domain + "cart/checkout",
+                    OrderHeader = orderHeaderDto
+                };
+
+                var stripeResponse = await _orderService.CreateStripeSessionAsync(stripeRequestDto);
+                StripeRequestDto stripeRequestDtoResult = JsonConvert.DeserializeObject<StripeRequestDto>
+                                                          (Convert.ToString(stripeResponse.Result));
+
+                Response.Headers.Add("Location", stripeRequestDtoResult.StripeSessionUrl);
+                return new StatusCodeResult(303);
             }
             return View(updatedCart);
         }

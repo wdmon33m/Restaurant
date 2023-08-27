@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Restaurant.Services.CouponAPI.Data;
 using Restaurant.Services.CouponAPI.Models;
 using Restaurant.Services.CouponAPI.Models.Dto;
@@ -97,12 +98,23 @@ namespace Restaurant.Services.CouponAPI.Controllers
                 {
                     _response.IsSuccess = false;
                     _response.ErrorMessages = new List<string>() { "Minimum Amount less than Discount Amount" };
-                }
+                } 
                 else
                 {
                     coupon = _mapper.Map<Coupon>(couponDto);
                     _db.Coupons.Add(coupon);
                     _db.SaveChanges();
+
+                    var options = new Stripe.CouponCreateOptions
+                    {
+                        AmountOff = (long)(couponDto.DiscountAmount * 100),
+                        Name = couponDto.CouponCode,
+                        Currency = "usd",
+                        Id = couponDto.CouponCode
+                    };
+                    var service = new Stripe.CouponService();
+                    service.Create(options);
+
                     _response.Result = couponDto;
                 }
             }
@@ -142,6 +154,10 @@ namespace Restaurant.Services.CouponAPI.Controllers
                 Coupon coupon = _db.Coupons.First(c => c.CouponID == id);
                 _db.Coupons.Remove(coupon);
                 _db.SaveChanges();
+
+
+                var service = new Stripe.CouponService();
+                service.DeleteAsync(coupon.CouponCode);
             }
             catch (Exception ex)
             {

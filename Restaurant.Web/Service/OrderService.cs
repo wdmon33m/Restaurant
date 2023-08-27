@@ -24,5 +24,25 @@ namespace Restaurant.Web.Service
                 Url = SD.OrderApiBase + cartApiUrl + "CreateOrder"
             });
         }
+
+        public async Task<ResponseDto?> CreateStripeSessionAsync(StripeRequestDto stripeRequestDto)
+        {
+            return await _baseService.SendAsync(new RequestDto()
+            {
+                ApiType = SD.ApiType.POST,
+                Data = stripeRequestDto,
+                Url = SD.OrderApiBase + cartApiUrl + "CreateStripeSession"
+            });
+        }
+
+        public async Task<ResponseDto?> ValidateStripeSession(int orderHeaderId)
+        {
+            return await _baseService.SendAsync(new RequestDto()
+            {
+                ApiType = SD.ApiType.POST,
+                Data = orderHeaderId,
+                Url = SD.OrderApiBase + cartApiUrl + "ValidateStripeSession"
+            });
+        }
     }
 }
