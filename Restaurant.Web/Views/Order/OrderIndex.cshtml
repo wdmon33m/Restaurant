@@ -1,9 +1,61 @@
-﻿
-<div class="card shadow border-0 mt-4">
+﻿@{
+    var status = Context.Request.Query["status"];
+    var pending = "";
+    var approved = "";
+    var completed = "";
+    var cancelled = "";
+    var readyforpickup = "";
+    var all = "";
+
+    switch (status)
+    {
+        case "approved":
+            approved = "active text-white bg-seconddary";
+            break;
+        case "pending":
+            pending = "active text-white bg-seconddary";
+            break;
+        case "completed":
+            completed = "active text-white bg-seconddary";
+            break;
+        case "cancelled":
+            cancelled = "active text-white bg-seconddary";
+            break;
+        case "readyforpickup":
+            readyforpickup = "active text-white bg-seconddary";
+            break;
+        default:
+            all = "active text-white bg-seconddary";
+            break;
+    }
+}
+
+
+<div method="get" class="card shadow border-0 mt-4">
     <div class="card-header bg-secondary bg-gradient ml-0 py-3">
         <div class="row">
             <h1 class="tetx-white">Order List</h1>
         </div>
+        <ul class="list-group list-group-horizontal-sm pt-2">
+            <a style="text-decoration:none" asp-controller="Order" asp-action="OrderIndex" asp-route-status="@SD.Status_Pending.ToLower()">
+            <li class="list-group-item @pending">Pending</li>
+            </a>
+            <a style="text-decoration:none" asp-controller="Order" asp-action="OrderIndex" asp-route-status="@SD.Status_Approved.ToLower()">
+                <li class="list-group-item @approved">Approved</li>
+            </a>
+            <a style="text-decoration:none" asp-controller="Order" asp-action="OrderIndex" asp-route-status="@SD.Status_Completed.ToLower()">
+                <li class="list-group-item @completed">Completed</li>
+            </a>
+            <a style="text-decoration:none" asp-controller="Order" asp-action="OrderIndex" asp-route-status="@SD.Status_Cancelled.ToLower()">
+            <li class="list-group-item @cancelled">Cancelled</li>
+            </a>
+            <a style="text-decoration:none" asp-controller="Order" asp-action="OrderIndex" asp-route-status="@SD.Status_ReadyForPickup.ToLower()">
+            <li class="list-group-item @readyforpickup">Ready For Pickup</li>
+            </a>
+            <a style="text-decoration:none" asp-controller="Order" asp-action="OrderIndex" asp-route-status="all">
+            <li class="list-group-item @all">All</li>
+            </a>
+        </ul>
     </div>
     <div class="card-body p-4">
         <table id="tblData" class="table table-border table-striped pt-3" style="width:100%">

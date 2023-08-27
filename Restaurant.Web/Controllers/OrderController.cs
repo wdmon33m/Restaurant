@@ -77,7 +77,7 @@ namespace Restaurant.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAll(string status = "all")
         {
             IEnumerable<OrderHeaderDto> list;
             string userId = "";
@@ -90,6 +90,11 @@ namespace Restaurant.Web.Controllers
             if (response != null && response.IsSuccess)
             {
                 list = JsonConvert.DeserializeObject<List<OrderHeaderDto>>(Convert.ToString(response.Result));
+
+                if (status != "all")
+                {
+                    list = list.Where(u => u.Status.ToLower() == status.ToLower());
+                }
             }
             else
             {

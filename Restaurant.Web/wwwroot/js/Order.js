@@ -1,13 +1,41 @@
 ﻿var dataTable;
 
 $(document).ready(function () {
-    LoadDataTable();
+    var url = window.location.search;
+    if (url.includes("approved")) {
+        LoadDataTable("approved");
+    }
+    else {
+        if (url.includes("completed")) {
+            LoadDataTable("completed");
+        }
+        else {
+            if (url.includes("cancelled")) {
+                LoadDataTable("cancelled");
+            }
+            else {
+                if (url.includes("readyforpickup")) {
+                    LoadDataTable("readyforpickup");
+                }
+                else {
+                    if (url.includes("all")) {
+                        LoadDataTable("all");
+                    }
+                    else {
+                        if (url.includes("pending")) {
+                            LoadDataTable("pending");
+                        }
+                    }
+                }
+            }
+        }
+    }
 });
 
-function LoadDataTable() {
+function LoadDataTable(status) {
     dataTable = $('#tblData').DataTable({
         order: [[0, 'desc']],
-        "ajax": { url: "/order/getall" },
+        "ajax": { url: "/order/getall?status=" + status },
         "columns": [
             { data: 'orderHeaderId', "width": "5%" },
             { data: 'email', "width": "25%" },
