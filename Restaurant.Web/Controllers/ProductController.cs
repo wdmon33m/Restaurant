@@ -49,11 +49,47 @@ namespace Restaurant.Web.Controllers
                 }
                 else
                 {
+                    TempData["error"] = response?.ErrorMessages.FirstOrDefault();
+                }
+            }
+            return View(productDto);
+        }
+
+        public async Task<IActionResult> ProductUpdate(int productId)
+        {
+            ResponseDto? response = await _productService.GetProductAsync(productId);
+
+            if (response != null && response.IsSuccess)
+            {
+                ProductDto? productDto = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(response.Result));
+                return View(productDto);
+            }
+            else
+            {
+                TempData["error"] = response?.ErrorMessages;
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ProductUpdate(ProductDto productDto)
+        {
+            if (ModelState.IsValid)
+            {
+                ResponseDto? response = await _productService.UpdateProductAsync(productDto);
+                if (response != null && response.IsSuccess)
+                {
+                    TempData["success"] = "Product updated successfully";
+                    return RedirectToAction(nameof(ProductIndex));
+                }
+                else
+                {
                     TempData["error"] = response?.ErrorMessages.First();
                 }
             }
             return View(productDto);
         }
+
         public async Task<IActionResult> ProductDelete(int productId)
         {
             ResponseDto? response = await _productService.GetProductAsync(productId);

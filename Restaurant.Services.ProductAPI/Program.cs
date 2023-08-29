@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using Restaurant.Services.ProductAPI;
 using Restaurant.Services.ProductAPI.Data;
 using Restaurant.Services.ProductAPI.Extentions;
+using System.Net.Mime;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,10 +19,22 @@ IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+//builder.Services.Configure<FormOptions>(options =>
+//{
+//    options.MultipartBodyLengthLimit = long.MaxValue;
+//});
 
-builder.Services.AddControllers();
+
+builder.Services.AddControllers(options =>
+{
+    // Disable strict media type checking
+    options.RespectBrowserAcceptHeader = true; // This allows for more lenient handling of media types
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme, securityScheme: new OpenApiSecurityScheme
@@ -58,10 +71,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseRouting();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseStaticFiles();
 app.MapControllers();
 app.ApplyMigration();
 app.Run();

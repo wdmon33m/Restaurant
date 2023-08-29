@@ -1,5 +1,4 @@
-﻿using Restaurant.Web.Utility;
-using static Restaurant.Web.Utility.SD;
+﻿using static Restaurant.Web.Utility.SD;
 
 namespace Restaurant.Web.Models
 {
@@ -9,5 +8,6 @@ namespace Restaurant.Web.Models
         public string Url { get; set; }
         public object Data { get; set; }
         public string AccessToken { get; set; }
+        public ContentType ContentType { get; set; } = ContentType.Json;
     }
 }

@@ -21,7 +21,8 @@ namespace Restaurant.Web.Service
             {
                 ApiType = SD.ApiType.POST,
                 Data = productDto,
-                Url = SD.ProductApiBase + productApiUrl
+                Url = SD.ProductApiBase + productApiUrl,
+                ContentType = SD.ContentType.MultipartFormData
             });
         }
 
@@ -58,7 +59,8 @@ namespace Restaurant.Web.Service
             {
                 ApiType = SD.ApiType.PUT,
                 Data = productDto,
-                Url = SD.ProductApiBase + productApiUrl
+                Url = SD.ProductApiBase + productApiUrl,
+                ContentType = SD.ContentType.MultipartFormData 
             });
         }
     }
