@@ -35,6 +35,23 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1.0",
+        Title = "Order Version 1",
+        Description = "API to Orders",
+        TermsOfService = new Uri("https://example.com/term"),
+        Contact = new OpenApiContact
+        {
+            Name = "Mohamed",
+            Email = "wdmon33m@gmail.com"
+        },
+        License = new OpenApiLicense
+        {
+            Name = "Example license",
+            Url = new Uri("https://example.com/license")
+        }
+    });
     options.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme, securityScheme: new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -66,7 +83,19 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Order API");
+    });
+}
+if (app.Environment.IsProduction())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Order API");
+        options.RoutePrefix = string.Empty;
+    });
 }
 
 Stripe.StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();

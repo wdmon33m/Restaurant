@@ -74,6 +74,7 @@ namespace Restaurant.Services.AuthAPI.Controllers
         [HttpPost("assign")]
         public async Task<ActionResult<APIResponse>> AssignRole([FromBody] AssignRoleDto model)
         {
+
             var _response = await _roleService.AssignRole(model);
             if (!_response.ErrorMessages.IsNullOrEmpty())
             {

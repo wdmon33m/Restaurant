@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Restaurant.Web.Models;
 using Restaurant.Web.Models.Dto;
 using Restaurant.Web.Service.IService;
+using Restaurant.Web.Utility;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -81,7 +82,7 @@ namespace Restaurant.Web.Controllers
                 var result = await _authService.RegisterAsync(obj);
                 if (result != null && result.IsSuccess)
                 {
-                    AssignRoleDto assignRole = new() { Email = obj.Email, RoleName = "CUSTOMER" };
+                    AssignRoleDto assignRole = new() { Email = obj.Email, RoleName = SD.RoleCustomer };
                     result = await _roleService.AssignRoleAsync(assignRole);
 
                     if (result != null && result.IsSuccess)

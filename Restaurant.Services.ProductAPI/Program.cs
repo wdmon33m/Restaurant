@@ -37,6 +37,23 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(options =>
 {
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1.0",
+        Title = "Products Version 1",
+        Description = "API to Products",
+        TermsOfService = new Uri("https://example.com/term"),
+        Contact = new OpenApiContact
+        {
+            Name = "Mohamed",
+            Email = "wdmon33m@gmail.com"
+        },
+        License = new OpenApiLicense
+        {
+            Name = "Example license",
+            Url = new Uri("https://example.com/license")
+        }
+    });
     options.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme, securityScheme: new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -63,12 +80,23 @@ builder.AddAppAuthentication();
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Product API");
+    });
+}
+if (app.Environment.IsProduction())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Product API");
+        options.RoutePrefix = string.Empty;
+    });
 }
 
 app.UseRouting();

@@ -2,38 +2,38 @@
 
 <form asp-action="CouponCreate">
     <br />
-    <div class="container border col-xs-2 p-3">
+    <div class="container border p-4">
         <h1 class="text-white text-center">Create Coupon</h1>
 
         <hr />
         <div class="row" >
-            <div class="col-2">
+            <div class="col-lg-2 col-sm-2 pb-3 p-lg-0 pb-sm-0">
                 <label class="control-label pt-2" style="font-size:20px;">Coupon Code</label>
             </div>
-            <div class="col-10 pb-3">
+            <div class="col-lg-10 col-sm-6 pb-3 pt-sm-0">
                 <input asp-for="CouponCode" class="form-control" />
                 <span asp-validation-for="CouponCode" class="text-danger"></span>
             </div>
-            <div class="col-2">
+            <div class="col-lg-2 col-sm-6 pb-3 p-lg-0">
                 <label class="control-label pt-2" style="font-size:20px;">Discount Amount</label>
             </div>
-            <div class="col-10 pb-3">
+            <div class="col-lg-10 col-sm-4 pb-3">
                 <input asp-for="DiscountAmount" class="form-control" />
                 <span asp-validation-for="DiscountAmount" class="text-danger"></span>
             </div>
-            <div class="col-2">
+            <div class="col-lg-2 col-sm-6 pb-3 p-lg-0">
                 <label class="control-label pt-2" style="font-size:20px;">Minimum Amount</label>
             </div>
-            <div class="col-10 pb-3">
+            <div class="col-lg-10 col-sm-4 pb-3">
                 <input asp-for="MinAmount" class="form-control" />
                 <span asp-validation-for="MinAmount" class="text-danger"></span>
             </div>
 
             
-            <div class="col-5 offset-2">
+            <div class="col-lg-5 col-sm-2 pt-lg-0 pt-3 offset-lg-2">
                 <input type="submit" value="Create" class="btn btn-success form-control" />
             </div>
-            <div class="col-5">
+            <div class="col-lg-5 col-sm-2 pt-lg-0 pt-3 pb-sm-2">
                 <a asp-action="CouponIndex" class="btn-primary btn form-control ">Back to List</a>
             </div>
         </div>

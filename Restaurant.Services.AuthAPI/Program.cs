@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Restaurant.Services.AuthAPI.Data;
 using Restaurant.Services.AuthAPI.Models;
 using Restaurant.Services.AuthAPI.Service;
@@ -25,7 +26,28 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1.0",
+        Title = "Authetication Version 1",
+        Description = "API to Authentication",
+        TermsOfService = new Uri("https://example.com/term"),
+        Contact = new OpenApiContact
+        {
+            Name = "Mohamed",
+            Email = "wdmon33m@gmail.com"
+        },
+        License = new OpenApiLicense
+        {
+            Name = "Example license",
+            Url = new Uri("https://example.com/license")
+        }
+    });
+});
+
+
 
 var app = builder.Build();
 
@@ -33,7 +55,19 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Auth API");
+    });
+}
+if (app.Environment.IsProduction())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Auth API");
+        options.RoutePrefix = string.Empty;
+    });
 }
 
 app.UseHttpsRedirection();

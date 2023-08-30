@@ -112,7 +112,7 @@ namespace Restaurant.Services.ProductAPI.Controllers
         }
 
         [HttpPut]
-        [Authorize]
+        [Authorize(Roles = "ADMIN")]
         public ResponseDto Put([FromForm]ProductDto productDto)
         {
             try

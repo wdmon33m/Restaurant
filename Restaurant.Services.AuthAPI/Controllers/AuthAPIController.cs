@@ -25,6 +25,14 @@ namespace Restaurant.Services.AuthAPI.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<APIResponse>> Register([FromBody] RegistrationRequestDto model)
         {
+            if (model == null)
+            {
+                _response.ErrorMessages = new() { "Please enter user name and passowrd" };
+                _response.IsSuccess = false;
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                return _response;
+            }
+
             _response = await _authService.Register(model);
             if (!_response.ErrorMessages.IsNullOrEmpty())
             {
