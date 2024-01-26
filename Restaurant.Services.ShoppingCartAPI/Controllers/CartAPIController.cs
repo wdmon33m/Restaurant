@@ -42,6 +42,15 @@ namespace Restaurant.Services.ShoppingCartAPI.Controllers
                     return _response;
                 }
 
+                var couponCode = cartDto.CartHeader.CouponCode;
+                var coupon = await _couponService.GetCouponAsync(couponCode);
+                if (coupon == null)
+                {
+                    _response.IsSuccess = false;
+                    _response.ErrorMessages = new() { "The coupon is not exist!" };
+                    return _response;
+                }
+
                 var cartHeaderFromDb = await _db.CartHeaders.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == cartDto.CartHeader.UserId);
                 if (cartHeaderFromDb == null)
                 {
@@ -174,11 +183,21 @@ namespace Restaurant.Services.ShoppingCartAPI.Controllers
             try
             {
                 var cartHeaderFromDb = await _db.CartHeaders.FirstAsync(u => u.UserId == cartDto.UserId);
-                cartHeaderFromDb.CouponCode = cartDto.CouponCode;
-                _db.CartHeaders.Update(cartHeaderFromDb);
-                await _db.SaveChangesAsync();
+                cartHeaderFromDb.CouponCode = cartDto.CouponCode.ToUpper();
 
-                _response.Result = "Coupon has been applied successfully";
+                var coupon = await _couponService.GetCouponAsync(cartHeaderFromDb.CouponCode);
+                if (coupon.CouponCode != null)
+                {
+                    _db.CartHeaders.Update(cartHeaderFromDb);
+                    await _db.SaveChangesAsync();
+
+                    _response.Result = "Coupon has been applied successfully";
+                    return _response;
+                }
+                _response.ErrorMessages = new() { "Coupon is not exist!" };
+                _response.IsSuccess = false;
+
+                return _response;
             }
             catch (Exception ex)
             {
