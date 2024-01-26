@@ -5,7 +5,6 @@ using Microsoft.OpenApi.Models;
 using Restaurant.Services.ProductAPI;
 using Restaurant.Services.ProductAPI.Data;
 using Restaurant.Services.ProductAPI.Extentions;
-using System.Net.Mime;
 
 var builder = WebApplication.CreateBuilder(args);
 
