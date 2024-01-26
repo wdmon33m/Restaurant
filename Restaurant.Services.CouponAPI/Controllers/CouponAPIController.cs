@@ -83,6 +83,7 @@ namespace Restaurant.Services.CouponAPI.Controllers
             return _response;
         }
         [HttpPost]
+        [Authorize(Roles = "ADMIN")]
         public ResponseDto Post([FromBody] CouponDto couponDto)
         {
             try
@@ -101,6 +102,7 @@ namespace Restaurant.Services.CouponAPI.Controllers
                 } 
                 else
                 {
+                    couponDto.CouponCode = couponDto.CouponCode.ToUpper();
                     coupon = _mapper.Map<Coupon>(couponDto);
                     _db.Coupons.Add(coupon);
                     _db.SaveChanges();
@@ -127,10 +129,12 @@ namespace Restaurant.Services.CouponAPI.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "ADMIN")]
         public ResponseDto Put([FromBody] CouponDto couponDto)
         {
             try
             {
+                couponDto.CouponCode = couponDto.CouponCode.ToUpper();
                 Coupon coupon = _mapper.Map<Coupon>(couponDto);
                 _db.Coupons.Update(coupon);
                 _db.SaveChanges();
